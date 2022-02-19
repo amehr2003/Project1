@@ -70,10 +70,7 @@ public class ResizeableArrayBag implements BagInterface<T> {
         } //end for
         return result;
     } // end toArray
-
-    public boolean isFull() {
-        return numberOfEntries == bag.length;
-    } //end isFull
+    
     public boolean isEmpty() {
         return numberOfEntries == 0;
     } //end isEmpty
@@ -124,8 +121,4 @@ public class ResizeableArrayBag implements BagInterface<T> {
         while (!isEmpty())
             remove();
     } //end clear
-
-    public boolean contains(T anEntry) {
-        return false; // STUB
-    } // end contains
 }
