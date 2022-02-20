@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class ResizeableArrayBag implements BagInterface<T> {
+public class ResizeableArrayBag<T> implements BagInterface<T> {
     private T[] bag;
     private int numberOfEntries;
     private boolean integrityOK = false;
@@ -22,10 +22,6 @@ public class ResizeableArrayBag implements BagInterface<T> {
         else {
             throw new IllegalStateException("Attempt to make bag too big");
         } //end constructor
-        private void checkIntegrity() {
-            if (!integrityOK)
-                throw new SecurityException("ArrayBag object is corrupt");
-        } //end checkIntegrity
 
     }
 
@@ -38,7 +34,7 @@ public class ResizeableArrayBag implements BagInterface<T> {
     private void checkCapacity(int capacity) {
         if (capacity > MAX_CAPACITY)
             throw new IllegalStateException("Attempt to create a bag whose " +
-                    "capacity exeeds allowed " +
+                    "capacity exceeds allowed " +
                     "maximum of " + MAX_CAPACITY);
     } // end checkCapacity
 
@@ -49,9 +45,9 @@ public class ResizeableArrayBag implements BagInterface<T> {
     } //end doubleCapacity
 
     public boolean add(T newEntry) {
-        checkIntegrity();
+        checkInitialization();
         boolean result = true;
-        if (isFull()) {
+        if (isArrayFull()) {
             doubleCapacity();
         } //end if
         bag[numberOfEntries] = newEntry;
@@ -70,41 +66,62 @@ public class ResizeableArrayBag implements BagInterface<T> {
         } //end for
         return result;
     } // end toArray
-    
+
     public boolean isEmpty() {
         return numberOfEntries == 0;
     } //end isEmpty
 
-
-    @Override
     public BagInterface<T> Union(BagInterface<T> bag) {
-        return null;
+
+        BagInterface<T> I = new ResizeableArrayBag<T>();
+        T[] array = this.toArray();
+        for (T elem : array) {
+            I.add(elem);
+        }
+        T[] other = bag.toArray();
+        for (T elem : other) {
+            I.add(elem);
+        }
+        return I;
     }
 
-    @java.lang.Override
     public BagInterface<T> Intersection(BagInterface<T> bag) {
+
+        BagInterface<T> I = new ResizeableArrayBag<T>();
+
+        T[] array = this.toArray();
+        T[] other = bag.toArray();
+
+        boolean status[] = new boolean[other.length];
+
+        for ( int i = 0; i < array.length; i++) {
+            for ( int j = 0; j < other.length; j++) {
+                if (other[i].equals(array[i]) && (!status[j])) {
+                    I.add(array[i]);
+                    status[j] = true;
+                }
+            }
+        }
+        return I;
+} //end Intersection
+
+    public BagInterface<T> Difference(BagInterface<T> bag){
         return null;
-    }
-
-    @java.lang.Override
-    public BagInterface<T> Difference(BagInterface<T> bag) {
-        return null;
-    }
-
-
+        }
     public int getCurrentSize() {
         return numberOfEntries;
     } //end getCurrentSize
 
     public int getFrequencyOf(T anEntry) {
-        checkIntegrity();
+
         int counter = 0;
 
         for (int index = 0; index < numberOfEntries; index++) {
             if (anEntry.equals(bag[index])) {
-                counter++
+                counter++;
             } //end if
         } //end for
+        return counter;
     } //end getFrequencyOf
 
     public T remove() {
@@ -121,4 +138,12 @@ public class ResizeableArrayBag implements BagInterface<T> {
         while (!isEmpty())
             remove();
     } //end clear
+    private void checkInitialization() {
+        if (!integrityOK) {
+            throw new SecurityException("Uninitialized object used to call an arrayBag method");
+        }
+    }  //end checkInitialization
+    private boolean isArrayFull() {
+        return numberOfEntries >= bag.length;
+    }
 }
