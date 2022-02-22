@@ -3,9 +3,9 @@ import java.util.Arrays;
 public class ResizeableArrayBag<T> implements BagInterface<T> {
     private T[] bag;
     private int numberOfEntries;
-    private boolean integrityOK = false;
+    private boolean integrityOK = false; //used in the checkInitialization class
     private static final int DEFAULT_CAPACITY = 25; //initialized capacity of bag
-    private static final int MAX_CAPACITY = 1000000;
+    private static final int MAX_CAPACITY = 10000;
     //creating an empty bag whose initial capacity is 25
     public ResizeableArrayBag() {
         this(DEFAULT_CAPACITY);
@@ -36,19 +36,19 @@ public class ResizeableArrayBag<T> implements BagInterface<T> {
             throw new IllegalStateException("Attempt to create a bag whose " +
                     "capacity exceeds allowed " +
                     "maximum of " + MAX_CAPACITY);
-    } // end checkCapacity
+    } // end checkCapacity (makes sure the bag contents don't exceed the allowed amount)
 
     private void doubleCapacity() {
         int newLength = 2 * bag.length;
         checkCapacity(newLength);
         bag = Arrays.copyOf(bag, newLength);
-    } //end doubleCapacity
+    } //end doubleCapacity (In order to add a new entry to the bag, this class will double the size of the capacity and make that it's new length)
 
     public boolean add(T newEntry) {
-        checkInitialization();
+        checkInitialization(); 
         boolean result = true;
-        if (isArrayFull()) {
-            doubleCapacity();
+        if (isArrayFull()) { 
+            doubleCapacity(); //if it's full it will double the array like I said for doubleCapacity method)
         } //end if
         bag[numberOfEntries] = newEntry;
         numberOfEntries++;
@@ -73,40 +73,40 @@ public class ResizeableArrayBag<T> implements BagInterface<T> {
 
     public BagInterface<T> Union(BagInterface<T> bag) {
 
-        BagInterface<T> I = new ResizeableArrayBag<T>();
-        T[] array = this.toArray();
+        BagInterface<T> I = new ResizeableArrayBag<T>(); //makes a new bag called I
+        T[] array = this.toArray(); //creates two new arrays, array and other (below)
         for (T elem : array) {
             I.add(elem);
         }
-        T[] other = bag.toArray();
+        T[] other = bag.toArray(); //the enhanced for loop goes through the array and adds the elements to the new array
         for (T elem : other) {
             I.add(elem);
         }
-        return I;
+        return I; //then returns I with the unionized elements of T and I bag arrays (other and array)
     }
 
     public BagInterface<T> Intersection(BagInterface<T> bag) {
 
-        BagInterface<T> I = new ResizeableArrayBag<T>();
+        BagInterface<T> I = new ResizeableArrayBag<T>(); //creates a new resizeableArrayBag called I
 
-        T[] array = this.toArray();
+        T[] array = this.toArray(); //other and array are back
         T[] other = bag.toArray();
 
-        boolean status[] = new boolean[other.length];
+        boolean status[] = new boolean[other.length]; //makes sure the lengths are okay
 
-        for ( int i = 0; i < array.length; i++) {
-            for ( int j = 0; j < other.length; j++) {
-                if (other[i].equals(array[i]) && (!status[j])) {
-                    I.add(array[i]);
+        for ( int i = 0; i < array.length; i++) { //loops through the contents of the first array
+            for ( int j = 0; j < other.length; j++) { //while in a nested for loop for the contents of the second array (called other^)
+                if (other[i].equals(array[i]) && (!status[j])) { 
+                    I.add(array[i]); //adds the contents of array array
                     status[j] = true;
                 }
             }
         }
-        return I;
+        return I; //yeah, return :)
 } //end Intersection
 
     public BagInterface<T> Difference(BagInterface<T> bag){
-        return null;
+        return null; //this is hard 
         }
     public int getCurrentSize() {
         return numberOfEntries;
@@ -121,7 +121,7 @@ public class ResizeableArrayBag<T> implements BagInterface<T> {
                 counter++;
             } //end if
         } //end for
-        return counter;
+        return counter; //in notes, didn't really understand well
     } //end getFrequencyOf
 
     public T remove() {
