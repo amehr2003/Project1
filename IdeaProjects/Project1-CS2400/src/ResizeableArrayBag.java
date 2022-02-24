@@ -106,8 +106,21 @@ public class ResizeableArrayBag<T> implements BagInterface<T> {
     } //end Intersection
 
     public BagInterface<T> Difference(BagInterface<T> bag) {
-            //bro im struggling
-        return null;
+
+        BagInterface<T> I = new ResizeableArrayBag<T>();
+
+        T[] array = this.toArray();
+        T[] other = bag.toArray();
+
+        boolean status[] = new boolean[other.length];
+
+        for (int i = 0; i < array.length; i++) {
+            if (this.contains(array[i])) {
+                I.remove(array[i]);
+            }
+
+        }
+        return I;
     }
 
     public int getCurrentSize() {
@@ -177,5 +190,9 @@ public class ResizeableArrayBag<T> implements BagInterface<T> {
     }  //end checkInitialization
     private boolean isArrayFull() {
         return numberOfEntries >= bag.length;
+    }
+    public boolean contains(T anEntry) {
+        checkInitialization();
+        return getIndexOf(anEntry) > -1;
     }
 }
