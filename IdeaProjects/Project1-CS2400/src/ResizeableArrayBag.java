@@ -105,9 +105,11 @@ public class ResizeableArrayBag<T> implements BagInterface<T> {
         return I;
     } //end Intersection
 
-    public BagInterface<T> Difference(BagInterface<T> bag){
+    public BagInterface<T> Difference(BagInterface<T> bag) {
+            //bro im struggling
         return null;
     }
+
     public int getCurrentSize() {
         return numberOfEntries;
     } //end getCurrentSize
@@ -124,15 +126,45 @@ public class ResizeableArrayBag<T> implements BagInterface<T> {
         return counter;
     } //end getFrequencyOf
 
+    public int getIndexOf(T anEntry) {
+        int where = -1;
+        boolean found = false;
+        int index = 0;
+        while (!found && (index < numberOfEntries)) {
+            if (anEntry.equals(bag[index])) {
+                found = true;
+                where = index;
+            } //end if
+            index++;
+        } //end while
+        return where;
+    }
     public T remove() {
-        return null; // STUB
+
+        checkInitialization();
+        T result = removeEntry(numberOfEntries - 1); //removes one occurrence of a given entry in a bag
+        return result;
+
     } // end remove
 
     public boolean remove(T anEntry) {
-        return false; // STUB
-    } // end remove
 
-    /** Removes all entries from this bag. */
+        checkInitialization();
+        int index = getIndexOf(anEntry);
+        T result = removeEntry(index);
+        return anEntry.equals(result);
+    } // end remove
+    private T removeEntry(int givenIndex) {
+        T result = null;
+        if (!isEmpty() && (givenIndex >= 0)) {
+            result = bag[givenIndex]; //Entry to remove
+            int lastIndex = numberOfEntries - 1;
+            bag[givenIndex] = bag[lastIndex]; //replace entry to remove with
+            bag[lastIndex] = null; //removes reference to last array
+            numberOfEntries--;
+        } //end if
+        return result;
+    } //end remove(T entry)
 
     public void clear() {
         while (!isEmpty())
